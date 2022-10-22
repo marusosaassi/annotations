@@ -9,7 +9,7 @@ public class AnnotationExample {
     public static void main(String[] args) {
         Product product = new Product();
         product.setDate(LocalDate.now());
-        product.setName("laptop");
+        product.setName("wireless gaming logitech KEYBOARD");
         product.setPrice(1000L);
 
         System.out.println("json = " + JsonSerializer.convertJson(product));
@@ -40,4 +40,3 @@ public class AnnotationExample {
         //System.out.println("json = " + json);
     }
 }
- 

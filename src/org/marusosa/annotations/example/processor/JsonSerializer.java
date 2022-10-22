@@ -6,6 +6,7 @@ import org.marusosa.annotations.example.processor.exception.JsonSerializerExcept
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class JsonSerializer {
     public static String convertJson(Object object) {
@@ -30,8 +31,12 @@ public class JsonSerializer {
                         String newValue = (String) value;
                         /*newValue = newValue.substring(0,1).toUpperCase() +
                             newValue.substring(1).toLowerCase();*/
-                        newValue = String.valueOf(newValue.charAt(0)).toUpperCase() +
-                            newValue.substring(1).toLowerCase();
+                        /*newValue = String.valueOf(newValue.charAt(0)).toUpperCase() +
+                            newValue.substring(1).toLowerCase();*/
+                        newValue = Arrays.stream(newValue.split(" "))
+                            .map(word -> word.substring(0,1 ).toUpperCase()
+                                + word.substring(1).toLowerCase())
+                            .collect(Collectors.joining(" "));
                         f.set(object, newValue);
                     }
                     return "\"" + name + "\":\"" + f.get(object) + "\"";
