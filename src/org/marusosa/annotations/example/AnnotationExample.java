@@ -1,10 +1,9 @@
 package org.marusosa.annotations.example;
 
 import org.marusosa.annotations.example.models.Product;
+import org.marusosa.annotations.example.processor.JsonSerializer;
 
-import java.lang.reflect.Field;
 import java.time.LocalDate;
-import java.util.Arrays;
 
 public class AnnotationExample {
     public static void main(String[] args) {
@@ -13,8 +12,11 @@ public class AnnotationExample {
         product.setName("laptop");
         product.setPrice(1000L);
 
-        Field[] atributes = product.getClass().getDeclaredFields();
-        String json = Arrays.stream(atributes).filter(
+        System.out.println("json = " + JsonSerializer.convertJson(product));
+
+
+        //Field[] atributes = product.getClass().getDeclaredFields();
+        /* String json = Arrays.stream(atributes).filter(
                 f -> f.isAnnotationPresent(JsonAttribute.class)
         ).map(f-> {
             f.setAccessible(true);
@@ -33,8 +35,8 @@ public class AnnotationExample {
                     return a + b;
                 }
                 return a + ", " + b;
-            }).concat("}");
+            }).concat("}"); */
 
-        System.out.println("json = " + json);
+        //System.out.println("json = " + json);
     }
 }
