@@ -1,19 +1,43 @@
 package org.marusosa.annotations.example.processor;
 
+import org.marusosa.annotations.example.Init;
 import org.marusosa.annotations.example.JsonAttribute;
 import org.marusosa.annotations.example.processor.exception.JsonSerializerException;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class JsonSerializer {
-    public static String convertJson(Object object) {
-
+    //initializes the object before converting it to json
+    public static void initializeObject(Object object){
         if(Objects.isNull(object)) {
             throw new JsonSerializerException("Object cannot be null");
         }
+
+        Method[] methods = object.getClass().getDeclaredMethods();
+        Arrays.stream(methods).filter(m-> m.isAnnotationPresent(Init.class))
+            .forEach(m-> {
+                m.setAccessible(true); //to avoid the exception, because the method init() is private
+                try {
+                    m.invoke(object);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new JsonSerializerException(
+                        "Error while serializing. Object cannot be initialized."
+                        + e.getMessage()
+                    );
+                }
+            });
+    }
+    public static String convertJson(Object object) {
+        if(Objects.isNull(object)) {
+            throw new JsonSerializerException("Object cannot be null");
+        }
+
+        initializeObject(object);
 
         Field[] atributes = object.getClass().getDeclaredFields();
 
@@ -33,10 +57,10 @@ public class JsonSerializer {
                             newValue.substring(1).toLowerCase();*/
                         /*newValue = String.valueOf(newValue.charAt(0)).toUpperCase() +
                             newValue.substring(1).toLowerCase();*/
-                        newValue = Arrays.stream(newValue.split(" "))
+                        /*newValue = Arrays.stream(newValue.split(" "))
                             .map(word -> word.substring(0,1 ).toUpperCase()
                                 + word.substring(1).toLowerCase())
-                            .collect(Collectors.joining(" "));
+                            .collect(Collectors.joining(" "));*/
                         f.set(object, newValue);
                     }
                     return "\"" + name + "\":\"" + f.get(object) + "\"";

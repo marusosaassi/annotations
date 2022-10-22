@@ -1,12 +1,15 @@
 package org.marusosa.annotations.example.models;
 
+import org.marusosa.annotations.example.Init;
 import org.marusosa.annotations.example.JsonAttribute;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class Product {
 
-    @JsonAttribute(name = "description", capitalizer = true)
+    @JsonAttribute(name = "description")
     private String name;
     @JsonAttribute
     private Long price;
@@ -34,5 +37,13 @@ public class Product {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    @Init
+    private void init() {
+        this.name = Arrays.stream(name.split(" "))
+            .map(word -> word.substring(0,1 ).toUpperCase()
+                + word.substring(1).toLowerCase())
+            .collect(Collectors.joining(" "));
     }
 }
