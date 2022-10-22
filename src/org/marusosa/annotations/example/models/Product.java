@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public class Product {
 
-    @JsonAttribute
+    @JsonAttribute(name = "description")
     private String name;
     @JsonAttribute
     private Long price;
