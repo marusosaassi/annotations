@@ -11,5 +11,6 @@ import java.lang.annotation.*;
 //class: in compilation time, runtime: in execution time, source: none of them
 public @interface JsonAttribute {
     String name() default "";
+    boolean capitalizer() default false;
 
 }

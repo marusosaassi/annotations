@@ -24,6 +24,16 @@ public class JsonSerializer {
                     ? f.getName()
                     : f.getAnnotation(JsonAttribute.class).name();
                 try {
+                    Object value = f.get(object);
+                    if(f.getAnnotation(JsonAttribute.class).capitalizer() &&
+                    value instanceof String) {
+                        String newValue = (String) value;
+                        /*newValue = newValue.substring(0,1).toUpperCase() +
+                            newValue.substring(1).toLowerCase();*/
+                        newValue = String.valueOf(newValue.charAt(0)).toUpperCase() +
+                            newValue.substring(1).toLowerCase();
+                        f.set(object, newValue);
+                    }
                     return "\"" + name + "\":\"" + f.get(object) + "\"";
                 } catch (IllegalAccessException e) {
                     throw new JsonSerializerException("Error while serializing the json " + e.getMessage());
